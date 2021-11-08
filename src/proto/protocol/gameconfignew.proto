@@ -1,0 +1,535 @@
+syntax = "proto2";
+import "def.proto";
+package op_gameconfig_01;
+
+option cc_enable_arenas = true;
+
+message Access
+{
+    required Node node = 1;
+    required op_def.AccessEnum access = 2;
+}
+
+
+message HumanoidSlot
+{
+    required string slot = 1;
+    required string version = 2;
+    optional string sn = 3;
+    optional bool emptyOverride = 4;
+    optional bool removeBase = 5;
+    optional string imgDataBase64 = 6;
+}
+
+message HumanoidDescription
+{
+    optional Node node = 1;
+    required string name = 2;
+    required string version = 3;
+    optional string sn = 4;
+    required string modeId = 5;
+    repeated HumanoidSlot slots = 6;
+    optional string defaultAnimation = 7;
+}
+
+message AnimationProperties
+{
+    optional int32 dir = 1;
+    optional string defaultAnimation = 2;
+    optional bool scale = 3;
+}
+
+message LocationProperties
+{
+    optional float x = 1;
+    optional float y = 2;
+    optional float z = 3;
+}
+
+message AttributeProperties
+{
+    required int32 id = 1;
+    optional string key = 2;
+    optional int32 intVal = 3;
+    optional string strVal = 4;
+    optional bool boolVal = 5;
+}
+
+message EventProperties
+{  
+    required int32 id = 1;
+    optional op_def.GameEvent eventName = 2;
+}
+
+message ElementProperties
+{
+    optional AnimationProperties animations = 1;
+    optional LocationProperties location = 2;
+    repeated AttributeProperties attributes = 3;
+    repeated EventProperties events = 4;
+}
+
+message NodeRef {
+    required int32 id = 1;
+    required int32 parent = 2;
+    required int32 ref = 3;
+}
+
+message ElementRef
+{
+    required Node node = 1;
+    required int32 ref = 2;
+    repeated NodeRef nodeRefs = 3;
+    optional ElementProperties properties = 4;
+}
+
+message Entity
+{
+    required Node node = 1;
+    optional string version = 2;
+    optional bool is_moss = 3;
+    // 场景图层标志，标示实体应该在哪个图层渲染
+    optional int32 layer = 4;
+    optional string owner = 5;
+}
+
+//继承关系的基类
+message Node
+{
+    required int32 id = 1;
+    required op_def.NodeType type = 2;
+    required int32 Parent = 3;//父类id
+    repeated op_def.NodeType LockParent = 4;//可继承的父类类型
+    required string name = 5;
+    optional string sn = 6;     //序列编号
+    optional int32 ref = 7; // 指向副本节点id
+}
+
+message SceneOverView
+{
+    required int32 id = 1;
+    optional string name = 2;
+}
+
+//游戏关联
+message Game
+{
+    optional Node node = 1;
+    repeated Entity entity = 2;
+    repeated Location loc = 3;
+    repeated Movable movable = 4;
+    repeated Display display = 5;
+    repeated Attribute attr = 6;
+    repeated Function func = 7;
+    repeated Event event = 8;
+    repeated MapSize mapSize = 9;
+    repeated UI ui = 10;
+    repeated Timer timer = 11;
+    repeated Mutex mutex = 12;
+    repeated Avatar avatar = 13;
+    repeated Camp camp = 14;
+    repeated Animations animations = 15;
+    repeated AnimationData animationdatas = 16;
+    repeated Button button = 17;
+    optional Settings settings = 18;
+    repeated Text text = 19;
+    repeated SpawnPoint spawnpoint = 20;
+    repeated Access access = 21;
+    repeated Commodity commodities = 22;
+    optional Palette palette = 23;
+    optional TerrainCollection terrain = 24;
+    repeated SceneOverView scenes = 25;
+    optional Assets assets = 26;
+    optional Moss moss = 27;
+    optional MossCollection mossList = 28;
+    repeated Scenery seneries  = 29;
+    optional Mods mods = 30;
+    optional int32 program_code = 31; // pi
+    optional MossCollection walls = 32;
+    repeated MountSprites mount_sprites = 33;
+    optional GroundWalkableCollection groundWalkableCollection = 34;
+    optional string version = 35;
+    repeated HumanoidDescription humanoid = 36;
+    repeated ElementRef elementrefs = 37;
+}
+
+//BaseNode
+
+
+message Settings
+{
+    required Node node = 1;
+    optional int32 maxNumber = 2;
+    required int32 spawnpointid = 3;
+    optional op_def.KeyCode voice_keycode = 4;
+    optional int32 sceneid = 5;
+    optional int32 unitWidth = 6;
+    optional int32 unitHeight = 7;
+}
+
+message Camp
+{
+    required Node node = 1;
+    optional int32 maxNumber = 2;
+}
+
+
+message Avatar
+{
+    required Node node = 1;
+    repeated int32 dirable = 80; // avatar 美术资源可用方向， 人物一般固定为[1,3,5,7] 四个方向
+    required int32 defaultDir = 81;
+    optional string backbone_id = 82;
+    optional string defaultAnimation = 83;
+
+    optional string head_base_id = 2;
+    optional string head_hair_id = 3;
+    optional string head_eyes_id = 4;
+    optional string head_hair_back_id = 5;
+    optional string head_mous_id = 6;
+    optional string head_hats_id = 7;
+    optional string head_mask_id = 8;
+    optional string head_spec_id = 9;
+    optional string head_face_id = 10;
+
+    optional string body_base_id = 11;
+    optional string body_cost_id = 12;
+    optional string body_cost_dres_id = 13;
+    optional string body_tail_id = 14;
+    optional string body_wing_id = 15;
+    optional string body_spec_id = 16;
+    optional string body_scar_id = 17;
+    optional string body_cloa_id = 18;
+
+    optional string farm_base_id = 21;
+    optional string farm_cost_id = 22;
+    optional string farm_shld_id = 23;
+    optional string farm_weap_id = 24;
+    optional string farm_spec_id = 25;
+
+    optional string barm_base_id = 31;
+    optional string barm_cost_id = 32;
+    optional string barm_shld_id = 33;
+    optional string barm_weap_id = 34;
+    optional string barm_spec_id = 35;
+
+    optional string fleg_base_id = 41;
+    optional string fleg_cost_id = 42;
+    optional string fleg_spec_id = 43;
+
+    optional string bleg_base_id = 51;
+    optional string bleg_cost_id = 52;
+    optional string bleg_spec_id = 53;
+    optional string head_chin_id = 54;
+}
+
+//end BaseNode
+
+
+//ExtraNode
+
+//这个真的要么？
+message Mutex
+{
+    required Node node = 1;
+}
+
+message Location
+{
+    required Node node = 1;
+    required float x = 2;
+    required float y = 3;
+    required float z = 4;
+}
+
+message SpawnPoint
+{
+    required Node node = 1;
+    required Location loc = 2;
+}
+
+message Movable
+{
+    required Node node = 1;
+    optional int32 dir = 2;
+    optional int32 angle = 3;
+    optional int32 speed = 4;
+}
+
+
+message Animations
+{
+    required Node node = 1;
+    required string defaultAnimation = 2;
+    optional int32 dir = 3;
+    optional bool scale = 11 [default=false];
+}
+
+message AnimationData
+{
+    required Node node               = 1;
+    repeated int32 frame             = 2;   // 弃用，兼容老数据
+    required int32  frame_rate       = 3;   // 动画的帧频
+    optional string walkable_area    = 4;   // 行走区域
+    optional string collision_area   = 5;   // 碰撞区域
+    optional bool loop               = 6;   // 是否循环播放
+    repeated int32 origin_point      = 7;   // 原点，编辑器里的小红点
+    repeated int32 walk_origin_point = 8;   // 弃用，和origin_point重合 
+    optional string baseLoc          = 9;   // 物件动画左上角和原点的偏移量
+    repeated string frame_name       = 10;  // 弃用，兼容老数据。单层的动画序列 
+    // 交互区域，有交互区域代表此动画可以触发事件。
+    // 交互区域存在多个，由main_interactive_points决定主要的交互区域
+    repeated op_def.PBPoint2i interactive_area = 11; 
+    repeated op_def.PBPoint2i main_interactive_points = 12;
+    repeated float frame_duration = 13;     // 每一帧动画的修正时间（ms），播放期间每帧应出现的额外时间
+    repeated AnimationLayer layer = 14;     // 代替#10的单层动画序列，每层都有一个动画序列
+    // 挂载层,和外部动画组合时，如本动画是容器或者底座，外部动画将插入到此层并将外部动画的原点和此层内的挂载点锁定
+    optional AnimationMountLayer mount_layer = 15;
+}
+
+// 动画图层
+message AnimationLayer
+{
+    repeated string frame_name = 1;
+    optional op_def.PBPoint2f offset_loc = 2; // 图层左上角和原点的偏移量
+    repeated bool frame_visible = 3; //一个Bool型的数组，每个值代表对应index的帧是否可视。此阈值没有中间值并不能表示透明度，只能代表显示与否。
+    optional string name = 4; // 图层名字
+    optional int32 id = 5;
+}
+
+message AnimationMountLayer
+{
+    // 插入到AnimationLayer的第几层
+    required int32 index = 1;
+    // 多个挂载点
+    // 挂载点是相对于origin_point的坐标位置（可以有小数）
+    repeated op_def.PBPoint3f mount_point = 2;
+    // 一个整数数组，每个值描述了对应每一帧，每个挂载点是否可视。 从地位到高位，每一位0代表对应index的挂载点不可见。
+    // 最多定义8个挂载点。使用位运算 0x00000000 代表挂载点都不可见, 0x11111111 代表所有挂载点都可见。0x10000001代表index(0)和index(7)的挂载点可见
+    //                              ^      ^
+    //                             最后     首个点
+    repeated int32 frame_visible = 3;
+}
+
+message Display
+{
+    required Node node = 1;
+    required string data_path = 2;
+    required string texture_path = 3;
+    optional string tips = 4;
+    optional op_def.VerticalAlignment vertical = 5;
+    optional op_def.HorizontalAlignment horizontal = 6;
+    optional float scale_x = 7 [default = 1];
+    optional float scale_y = 8 [default = 1];
+}
+
+enum AttributeValueEnum
+{
+    intVal = 1;
+    strVal = 2;
+    boolVal = 3;
+    media = 4;
+}
+
+message Attribute                // 存储用户自定义属性
+{
+    required Node node = 1;
+    required string key = 2;
+    optional int32  intVal = 3; //99999 size
+    optional string strVal = 4; //999 size
+    optional bool boolVal = 5;
+    optional string media = 6;
+    optional string description = 7;
+    optional AttributeValueEnum valueType = 8[default=strVal];
+}
+
+
+message Function
+{
+    required Node node = 1;
+    required string fileName = 2;
+    required string funcName = 3;
+    required string version = 4;
+}
+
+message Event
+{
+    required Node node = 1;
+    required op_def.GameEvent eventName = 2;
+}
+
+
+message MapSize
+{
+    required Node node = 1;
+    required float cols = 2;
+    required float rows = 3;
+    required int32 tileWidth = 4;
+    required int32 tileHeight = 5;
+}
+
+
+message Text
+{
+    required Node node = 1;
+    optional op_def.StrMsg text = 2;
+    optional string color = 3 [default="#FFFFFF"];
+}
+
+message InputText
+{
+    required Node node = 1;
+}
+
+message Button
+{
+    required Node node = 1;
+    required op_def.StrMsg text = 2;
+    optional op_def.StrMsg tips = 3;
+    optional int32  param = 4;
+}
+
+message BoxItem
+{
+    required Node node = 1;
+    optional string sn = 2;
+    optional int32 count = 3;
+    optional int32 highlight = 4;
+    optional int32 empty = 5;
+}
+
+
+message BoxGrid
+{
+    required Node node = 1;
+    optional int32 width = 2;
+    optional int32 height = 3;
+    optional int32 specs =4;
+    optional op_def.Anchor anchor = 5;
+    optional string backgroundColor = 6;
+    repeated BoxItem boxes = 7;
+}
+
+
+
+message MenuItem // 这是一个菜单栏默认下面的多级菜单悬停会自动展开
+{
+    required Node node = 1;
+    optional op_def.StrMsg text = 2;
+    repeated MenuItem child = 3;
+}
+
+message UI
+{
+    required Node node = 1;
+    repeated string text = 2;
+}
+
+
+message Timer
+{
+    required Node node = 1;
+    required int32 timeout = 2;
+    required int32 interval = 3;
+}
+
+message Commodity
+{
+    required Node node = 1;
+    optional float price = 2;
+    optional op_def.CoinType coin_type = 3;
+    optional string description = 4;
+}
+
+
+//end ExtraNode
+
+
+// 0119-2020 edit by 7.
+// 地块索引数据,全局节点
+// 每个游戏只有一个Palette Node，内部定义了一个entity数组，加入游戏的地块类型都存于此节点中
+// 地形结构用Palette.entity 的index来描述
+message Palette {
+    required Node node = 1;
+    // 这里存放 Terrain 节点
+    repeated EntityKeyPair peers = 2;
+    optional int32 tileWidth = 3;
+    optional int32 tileHeight = 4;
+}
+
+message EntityKeyPair
+{
+    required int32 key = 1;
+    optional Entity entity = 2;
+}
+
+// 地形数据结构
+// 每个场景节点下有一个此节点。此节点包括一个二维数组。数组里存放的是场景网格每个格子对应的Palette Index
+// 地块具体数据从Palette结构中获取
+message TerrainCollection {
+    required Node node = 1;
+    required op_def.IntArrays data = 2;
+}
+
+message Assets {
+    required Node node = 1;
+    repeated Attribute items = 2;
+}
+
+// 0402-2020 edit by 7.
+// 非交互物件索引数据，全局节点。
+// 所谓非交互物件的定义是只有View没有业务逻辑不能交互的物件或装饰物件，正如名字Moss（苔藓、青苔）一样，就是用来装饰摆设的物件。
+// 每个游戏只有一个Moss Node，内部定义了一个entity数组，没有交互区域的物件会被优化掉，模板Entity存于此节点中
+message Moss
+{
+    required Node node = 1;
+    repeated EntityKeyPair peers = 2;
+}
+// 非交互物件集
+// 每个场景节点下有一个此节点。此节点包括一个Map。Map.id 是 message Moss 里Entity的id，Map.x，Map.y是坐标位置
+message MossCollection 
+{
+    required Node node = 1;
+    required op_def.LocationMap data = 2;
+}
+
+// editer by 7. at0410-2020
+// 游戏舞台布景，包括前景和后景，通过depth来表示
+// Scenery 节点只能挂在场景节点下，每个场景可以有多个布景，如果depth数值相同则按照节点挂载顺序排列。
+// Update at0427
+//  - photo_uri 改为 uris 从单一uri 变为uri的二维数组来描述图片分块
+//  - 新增布景宽高数据
+message Scenery
+{
+    required Node node = 1;
+    required op_def.StrArrays uris = 2; // 布景的图片资源地址,相对路径。二维数组
+    required int32 depth = 3; // 景深：舞台（游戏画面）的景深为0，背景的景深为负值，前景的景深为正值
+    optional op_def.PBPoint2f offset = 4; // 相对于坐标系0，0点的偏移量
+    optional float speed = 5; // 跟随舞台的加速度
+    optional int32 fit = 6; // 图片填充模式：居中、填充、拉伸、平铺
+    optional int32 height = 7;  // 布景高
+    optional int32 width = 8;   // 布景宽
+}
+
+message ModKeyPair
+{
+    required string name = 1;
+    required string version = 2;
+}
+
+message Mods
+{
+    required Node node = 1;
+    repeated ModKeyPair data = 2;
+}
+
+message MountSprites
+{
+    required Node node = 1;
+    repeated int32 ids = 2;
+}
+
+message GroundWalkableCollection {
+    required Node node = 1;
+    required op_def.BoolArray data = 2;
+}

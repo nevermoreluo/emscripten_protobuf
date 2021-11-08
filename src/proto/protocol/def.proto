@@ -1,0 +1,1050 @@
+syntax = "proto2";
+
+package op_def;
+
+option cc_enable_arenas = true;
+
+// TODO auto gen Message by Header file
+// can not use the same name of message, because proto define unique error
+enum OPCODE {
+    _OP_UNKNOWN = 0x00000000;
+    //_OP_WORLD_REQ_GALAXY_EXAMPLE                   = 0x00120000;
+}
+
+// Match OPCODE enum and move first "_" 
+//message OP_WORLD_REQ_GALAXY_EXAMPLE
+//{
+//    required int32  port=1;
+//    optional string name=2;
+//}
+
+enum ExecCode {
+    EXEC_CODE_FIND = 0x0000;
+    EXEC_CODE_ADD = 0x0001;
+    EXEC_CODE_UPDATE = 0x0002;
+    EXEC_CODE_DELETE = 0x0003;
+}
+
+enum CoinType {
+    TU_DING_COIN     = 0x0000;
+    QING_SONG_TANG   = 0x0001;
+    GOLD_COIN        = 0x0002;
+    COIN             = 0x0003;
+    DIAMOND          = 0x0004;
+}
+
+
+// 高位保留定义, 由服务器自定义, 后4位留给用户自定义
+enum TitleMask
+{
+    TQ_NickName = 0x00010000;
+    TQ_Badge    = 0x00020000;
+    // TQ_   = 0x0004;
+}
+
+//
+enum UserInput
+{
+    TQ_Input_Mouse      = 0x00000001;
+    TQ_Input_Keyboard   = 0x00000002;
+}
+
+enum ResponseStatus {
+    SUCCESS = 0x0000;
+    SERVER_ERROR_UNKNOWN                            = 0x1000;            // 服务端 未知异常
+    SERVER_ERROR_BUSY                               = 0x1002;            // 服务端 网络忙
+    SERVER_ERROR_TIMEOUT                            = 0x1003;            // 服务超时
+    SERVER_ERROR_SERVICE_NOT_FOUND                  = 0x1004;            // 找不到对应的服务
+
+    // 0x20 gateway error
+    SERVER_ERROR_BAD_GATEWAY                        = 0x2001;            // 网关异常
+
+    // 0x30 galaxy error
+    SERVER_ERROR_GALAXY_SERVICE_NOT_FOUND           = 0x3001;            // 没找到galaxy
+
+    // 0x40 virtual world error
+    SERVER_ERROR_WORLD_SERVICE_NOT_FOUND            = 0x4001;            // 没找到world
+
+    // 0x50 virtual error
+    SERVER_ERROR_VIRTUAL_WORLD_SERVICE_NOT_FOUND    = 0x5001;            // 没找到virtual world
+
+    // 0x60 cop error
+    // 0x70 property error
+    // 0x80 login error
+    // 0x90 request error
+    REQUEST_ERROR_WRONG_PARAM                       = 0x9400;           // 参数错误
+    REQUEST_UNAUTHORIZED                            = 0x9401;           // 鉴权失败
+
+    // 0xb0 platform
+    RANSFER_TO_GAME_BILLER_ERROR              = 0xb000;   // 支付失败
+
+    // 0xa0 friend error
+
+}
+
+enum ServerType {
+    UNKNOWN         = 0x00000000;
+    GATEWAY         = 0x00000001;
+    COP             = 0x00000002;
+    GALAXY          = 0x00000004;
+    WORLD           = 0x00000008;
+    V_WORLD         = 0x00000010;
+    PORTAL          = 0x00000020;
+    MAIL            = 0x00000040;
+    TICKET_SELLER   = 0x00000080;
+    STORAGE         = 0x00000100;
+    CLIENT          = 0x00000200;
+    LOBBY           = 0x00000400;
+    PORTAL_CTL      = 0x00000800;
+    WEB_PLATFORM    = 0x00001000;
+
+    PROPERTY = 0x0f000000;
+    LOGIN = 0x0f00001;
+}
+
+enum ChatChannel
+{
+    CurrentScene = 0;
+    World = 1;
+    Team = 2;
+    Private = 3;
+    System = 4;
+}
+
+/*
+ * 方向`
+ * ---------------------
+ * |
+ * |    1   0    7
+ * |     ↖  ↑  ↗
+ * |   2 ← 方向 → 6
+ * |     ↙  ↓  ↘
+ * |    3   4    5
+ * ---------------------
+ */
+
+enum Direction
+{
+
+    UP = 0;
+    UPPER_LEFT = 1;
+    LEFT = 2;
+    LOWER_LEFT = 3;
+    DOWN = 4;
+    LOWER_RIGHT = 5;
+    RIGHT = 6;
+    UPPER_RIGHT = 7;
+}
+
+enum MoveType
+{
+    CHARACTER = 0;
+    ELEMENT = 1;
+};
+
+
+message PBPoint2i
+{
+    required int32 x = 1;
+    required int32 y = 2;
+}
+
+message PBPoint3f
+{
+    required float x = 1;
+    required float y = 2;
+    optional float z = 3 [default=0];
+}
+
+message MovePoint
+{
+    optional PBPoint3f pos = 1;
+    optional uint64 timestamp = 2;
+}
+
+
+message MovePath
+{
+    optional int32 id = 1;
+    repeated MovePoint move_pos = 2;
+}
+
+
+// editer by 7.
+message PBPoint2f
+{
+    required float x = 1;
+    required float y = 2;
+}
+
+enum VoiceRoomStatus
+{
+    InVoiceRoom = 1;
+    OutsideVoiceRoom = 2;
+}
+
+enum GameStatus
+{
+    Blur = 1;   // 失去焦点
+    Focus = 2;  // 获得焦点
+    // Suspend = 3;
+}
+
+enum MouseEvent
+{
+    RightMouseDown = 1;
+    RightMouseUp   = 2;
+    LeftMouseDown  = 3;
+    LeftMouseUp    = 4;
+    WheelDown      = 5;
+    WheelUp        = 6;
+    RightMouseHolding = 7;
+    LeftMouseHolding = 8;
+    Tap = 9;
+}
+
+
+enum KeyCode {
+    Unknown = -1;
+    A = 65;
+    B = 66;
+    C = 67;
+    D = 68;
+    E = 69;
+    F = 70;
+    G = 71;
+    H = 72;
+    I = 73;
+    J = 74;
+    K = 75;
+    L = 76;
+    M = 77;
+    N = 78;
+    O = 79;
+    P = 80;
+    Q = 81;
+    R = 82;
+    S = 83;
+    T = 84;
+    U = 85;
+    V = 86;
+    W = 87;
+    X = 88;
+    Y = 89;
+    Z = 90;
+    ZERO = 48;
+    ONE = 49;
+    TWO = 50;
+    THREE = 51;
+    FOUR = 52;
+    FIVE = 53;
+    SIX = 54;
+    SEVEN = 55;
+    EIGHT = 56;
+    NINE = 57;
+    NUMPAD_0 = 96;
+    NUMPAD_1 = 97;
+    NUMPAD_2 = 98;
+    NUMPAD_3 = 99;
+    NUMPAD_4 = 100;
+    NUMPAD_5 = 101;
+    NUMPAD_6 = 102;
+    NUMPAD_7 = 103;
+    NUMPAD_8 = 104;
+    NUMPAD_9 = 105;
+    NUMPAD_MULTIPLY = 106;
+    NUMPAD_ADD = 107;
+    NUMPAD_ENTER = 108;
+    NUMPAD_SUBTRACT = 109;
+    NUMPAD_DECIMAL = 110;
+    NUMPAD_DIVIDE = 111;
+    F1 = 112;
+    F2 = 113;
+    F3 = 114;
+    F4 = 115;
+    F5 = 116;
+    F6 = 117;
+    F7 = 118;
+    F8 = 119;
+    F9 = 120;
+    F10 = 121;
+    F11 = 122;
+    F12 = 123;
+    F13 = 124;
+    F14 = 125;
+    F15 = 126;
+    COLON = 186;
+    EQUALS = 187;
+    COMMA = 188;
+    UNDERSCORE = 189;
+    PERIOD = 190;
+    QUESTION_MARK = 191;
+    TILDE = 192;
+    OPEN_BRACKET = 219;
+    BACKWARD_SLASH = 220;
+    CLOSED_BRACKET = 221;
+    QUOTES = 222;
+    BACKSPACE = 8;
+    TAB = 9;
+    CLEAR = 12;
+    ENTER = 13;
+    SHIFT = 16;
+    CONTROL = 17;
+    ALT = 18;
+    CAPS_LOCK = 20;
+    ESC = 27;
+    SPACEBAR = 32;
+    PAGE_UP = 33;
+    PAGE_DOWN = 34;
+    END = 35;
+    HOME = 36;
+    KB_LEFT = 37;
+    KB_UP = 38;
+    KB_RIGHT = 39;
+    KB_DOWN = 40;
+    PLUS = 43;
+    MINUS = 44;
+    INSERT = 45;
+    DELETE = 46;
+    HELP = 47;
+    NUM_LOCK = 144;
+}
+
+
+enum TerrainAnimationType
+{
+    DYNAMIC_TYPE = 16;
+    STATIC_TYPE = 1;
+}
+
+
+enum NodeType {
+    UnknownNodeType = 0;
+    GameNodeType = 1;
+    SceneNodeType = 2;
+    ElementNodeType = 3;
+    TerrainNodeType = 4;
+    CharacterNodeType = 5;
+    LocationType = 6;
+    MovableType = 7;
+    DisplayType = 8;
+    AttributeType = 9;
+    FunctionType = 10;
+    AnimationsType = 11;
+    EventType = 12;
+    MapSizeType = 13;
+    UIType = 14;
+    TimerType = 15;
+    PackageType = 16;
+    PackageItemType = 17;
+    AvatarType = 18;
+    SettingsType = 19;
+    CampType = 20;
+    MutexType = 21;
+    AnimationDataType = 22;
+    ForkType = 23;
+    ButtonType = 24;
+    TextType = 25;
+    AccessType = 26;
+    SpawnPointType = 27;
+    CommodityType = 28;
+    ShopType = 29;
+    PaletteType = 30;
+    TerrainCollectionType = 31;
+    AssetsType = 32;
+    MossType = 33;
+    MossCollectionType = 34;
+    SceneryType = 35;
+    ModsType = 36;
+    InputTextType = 37;
+    WallNodeType = 38;
+    WallCollectionType = 39;
+    MountSpritesType = 40;
+    GroundWalkableCollectionType = 41;
+    HumanoidType = 42;
+}
+
+enum GameEventDetailStatus {
+    onTouching = 1;
+    onKeyboardPress = 2;
+}
+
+
+enum AccessEnum
+{
+    Accessible       = 0x0001;
+    TakeOut          = 0x0002;
+    Unlimited        = 0xFFFF;
+}
+
+
+enum GameEvent
+{
+    UnknownEvent = 0;
+    onGameCreateBefore  = 1;
+    onGameRun     = 2;
+    onGameDestroy = 3;
+    onGameSelectCharacter = 4;
+    onGameEnter   = 5;
+    onGameLeave   = 6;
+    onGameRightMouseDown = 7;
+    onGameRightMouseUp   = 8;
+    onGameLeftMouseDown  = 9;
+    onGameLeftMouseUp    = 10;
+    onGameMouseOut       = 11;
+    onGameMouseOver      = 12;
+
+    onSceneCreate  = 13;
+    onSceneRun     = 14;
+    onSceneDestroy = 15;
+    onSceneEnter   = 16;
+    onSceneLeave   = 17;
+
+    onElementCreate = 18;
+    onElementDestroy = 19;
+    onElementHit = 20;
+    onElementMove = 21;
+    onElementAttributeChange = 22;
+    onElementLeave = 23;
+    onElementStop = 24;
+    onElementActive = 38;
+    onElementUmount = 47;
+    onElementMount = 48;
+
+    onCharacterHit = 25;
+    onCharacterAttributeChange = 26;
+    onCharacterMove = 27;
+    onCharacterStop = 28;
+
+    onTerrainDestroy = 29;
+    onTerrainOverFunc = 30;
+    onTerrainLeaveFunc = 31;
+    onTerrainCreate = 33;
+
+    onUiClick = 34;
+    onPackageItemUse = 35;
+    onPackageItemMove = 36;
+    onTimerUpdate = 37;
+
+    onGameKeyboardDown = 39;
+    onGameKeyboardUp = 40;
+    onCharacterLeave = 41;
+    onChat = 42;
+    onGameCreateAfter = 43;
+    onPackageItemAdd = 44;
+    onPackageItemRemove = 45;
+    onPackageItemAttributeChange = 46;
+    onCharacterActive = 49;
+}
+
+enum ChihuahuaGameEvent
+{
+    onGamePreStart = 1;
+    onGamePostStart = 2;
+    onGameOver = 3;
+
+    onCharacterCreated = 4;
+    onCharacterEnterGame = 5;
+    onCharacterLeaveGame = 6;
+    onCharacterEnterScene = 7;
+    onCharacterLeaveScene = 8;
+
+    onSceneCreated = 9;
+
+    onElementCreated = 10;
+    onElementAttributeChanged = 11;
+
+    onUiActive = 12;
+    onUiAttrChange  = 13;
+
+    onItemActive = 14;
+    onItemAttrChange = 15;
+
+    onTick = 16;
+}
+
+enum ServerStatus
+{
+    SERVER_STARTING = 0;
+    SERVER_ALIVE = 1;
+    SERVER_OFFLINE = 2;
+    SERVER_WAITFORSHUTDOWN = 3; // 等待关闭
+    SERVER_REJECT_INIT = 4;
+    SERVER_FORCE_SHUTDOWN = 5;
+}
+
+message ConnectionCount
+{
+    required int32 id = 1;
+    required int32 connection_count = 2;
+}
+
+message BadgeCard
+{
+    required string name = 1;
+    required string thumbnail = 2;
+    optional int32  valid_date = 3;
+}
+
+
+message MovingKeys
+{
+    repeated KeyCode up_keys = 1;
+    repeated KeyCode down_keys = 2;
+    repeated KeyCode right_keys = 3;
+    repeated KeyCode left_keys = 4;
+}
+
+enum TQ_EVENT
+{
+    TQ_ACTIVE  = 1;
+    TQ_CONFIRM = 2;
+    TQ_CANCEL  = 3;
+    TQ_JUMP    = 4;
+
+    TQ_MOVE_RIGHT = 5;
+    TQ_MOVE_LEFT  = 6;
+    TQ_MOVE_UP    = 7;
+    TQ_MOVE_DOWN  = 8;
+
+    TQ_RUN_RIGHT = 9;
+    TQ_RUN_LEFT  = 10;
+    TQ_RUN_UP    = 11;
+    TQ_RUN_DOWN  = 12;
+
+    TQ_SHORTCUT = 13;
+    TQ_KEYBOARD = 14;
+}
+
+enum HorizontalAlignment
+{
+    HORIZONTAL_LEFT = 0;
+    HORIZONTAL_CENTER = 1;
+    HORIZONTAL_RIGHT = 2;
+    // HORIZONTAL_Stretch?
+}
+
+enum VerticalAlignment
+{
+    VERTICAL_TOP = 0;
+    VERTICAL_CENTER = 1;
+    VERTICAL_BOTTOM = 2;
+    // VERTICAL_Stretch?
+}
+
+message KeyCodeEvent
+{
+    required TQ_EVENT tq_event = 1;
+    repeated KeyCode key_codes = 2;
+}
+
+
+message Packet
+{
+    optional int32 id = 3;
+    optional int32 current_frame = 1;
+    optional int32 total_frame   = 2;
+}
+
+
+message UIDisplay
+{
+    required VerticalAlignment vertical = 1;
+    required HorizontalAlignment horizontal = 2;
+    optional string data_path = 3;
+    optional string texture_path = 4;
+    optional string tips = 5;
+}
+
+
+enum SceneTypeEnum
+{
+    NORMAL_SCENE_TYPE = 1;
+    EDIT_SCENE_TYPE = 2;
+}
+
+enum RoomTypeEnum
+{
+    NORMAL_ROOM = 1;    // 玩家房间
+    SHOP = 2;           // 商店街
+    LEVEL = 3;          // 关卡房间
+    PUBLIC = 4;         // 公共场景
+}
+
+enum MoveStyle
+{
+    DIRECTION_MOVE_STYLE = 1;
+    FOLLOW_MOUSE_MOVE_STYLE = 2;
+    PATH_MOVE_STYLE = 3;
+    FRONT_MOVE_STYLE = 4;
+}
+
+
+
+message Table
+{
+    repeated TablePair table_pair = 1;
+}
+
+
+message TablePair
+{
+    oneof key_oneof {
+    string key = 1;
+    int32 index = 2;
+    }
+    oneof value_oneof {
+        double number_val = 3;
+        string str_val = 4;
+        bool   bool_val = 5;
+        Table  sub_table = 6;
+    }
+}
+
+
+message IntArray
+{
+repeated int32 value = 1;
+}
+
+message IntArrays
+{
+repeated IntArray value = 1;
+}
+
+
+message BoolArray
+{
+    repeated bool value = 1;
+}
+
+message BoolArrays
+{
+    repeated BoolArray value = 1;
+}
+
+message OrderCommodities
+{
+    required string id = 1;
+    required int32 quantity = 2;
+    required string category = 3;
+}
+
+
+message MarketCategory
+{
+    required StrPair category = 1;
+    repeated StrPair subcategory = 2;
+}
+
+
+enum PathReachableStatus
+{
+    PATH_REACHABLE_AREA = 1;
+    PATH_UNREACHABLE_AREA = 2;
+    PATH_REACHABLE_WITH_INTERACTION_SPRITE = 3;
+    PATH_UNREACHABLE_WITH_INTERACTION_SPRITE = 4;
+}
+
+
+enum EditModeEnterRoomResult
+{
+    EDIT_MODE_ENTER_ROOM_SUCCESS = 1;
+    EDIT_MODE_ENTER_ROOM_IS_FULL = 2;
+    EDIT_MODE_ENTER_ROOM_NEED_PASSWORD = 3;
+    EDIT_MODE_ENTER_ROOM_PASSWORD_CHECK_FAILURE = 4;
+    EDIT_MODE_ENTER_ROOM_DOSE_NOT_EXISTS = 5;
+}
+
+enum EditModeRoomPrivacy
+{
+    EDIT_MODE_ROOM_PUBLIC = 1;
+    EDIT_MODE_ROOM_PRIVATE = 2;
+    EDIT_MODE_ROOM_LOCKED = 3;
+}
+
+// nevermore 2020.05.11
+// 客户端对服务端一个资源状态的查看以及请求,使用类restful风格规定该类型协议,对此类协议添加协议操作符概念
+//添加协议更新操作符
+//message STH
+//{
+//    required int32 id = 1;
+//    repeated int32 arrayField = 2;
+//    optional int32 intField = 3;
+//}
+//
+//message OP_STH
+//{
+//    required STH  sth = 1;    // required/optional/repeated
+//    required OpCommand command = 2;
+//}
+enum OpCommand
+{
+    OP_COMMAND_FIND = 0x0000;   // 查找对于资源查找请求
+    OP_COMMAND_CREATE = 0x0001;  // 声明创建某一个资源,全量更新
+    OP_COMMAND_UPDATE = 0x0002;   // 更新某一资源,全量更新
+    OP_COMMAND_DEL = 0x0003;        // 删除某一个资源
+    OP_COMMAND_PATCH = 0x0004;   // 部分更新某一资源
+}
+
+message MossMetaData
+{
+    required int32 key = 1;
+    required float x = 2;
+    required float y = 3;
+    optional float z = 4;
+    optional int32 dir = 5;
+    required int32 id = 6;
+}
+
+message LocationMap
+{
+    repeated MossMetaData locations = 1;
+}
+
+message StrPair
+{
+    optional string key = 1;
+    optional string value = 2;
+}
+
+message IntPair
+{
+    optional string keys = 1;
+    optional int32 value = 2;
+}
+
+message StrMap
+{
+    repeated StrPair pairs = 1;
+}
+
+// edit by 7. at0427-2020
+message StrArray
+{
+    repeated string value = 1;
+}
+
+message StrArrays
+{
+    repeated StrArray value = 1;
+}
+
+message ValueBar
+{
+    required int32 max = 1;
+    required int32 current_value = 2;
+}
+
+
+message State
+{
+    optional string name = 1;
+    optional bytes packet = 2;
+    optional NodeType type = 3[default=UnknownNodeType]; // 现在都是UnknownNodeType,即发送方和接收方自定义packet结构，并解析，未来考虑将游戏原有结构类型也按此结构同步
+    optional ExecCode exec_code = 4[default=EXEC_CODE_UPDATE];
+}
+
+message Mail
+{
+    optional int32 id = 13;
+    optional string mailbox_id = 1;
+    optional string sender_id = 2;
+    optional string receiver_id = 3;
+    optional string sender_nickname = 4;
+    optional string receiver_nickname = 5;
+    optional string title = 6;
+    optional string content = 7;
+    optional string attachment = 8;
+    optional int32 created_at = 9;
+    optional bool read = 10[default=false];
+    optional bool received_attachment = 11[default=false];
+    repeated string param = 12;
+    optional bool snap_mail = 14;
+}
+
+message MailStatus
+{
+    optional int32 id = 13;
+    optional bool read = 10[default=false];
+    optional bool received_attachment = 11[default=false];
+    repeated string param = 12;
+}
+
+
+
+enum GeneralParamType{
+    str = 1;
+    boolean = 2;
+    num = 3;
+    arrayBuffer = 4;
+}
+
+
+message GeneralParam {
+    required GeneralParamType t = 1;
+    optional int32 opcode = 2; // 为var_bytes预留
+    optional string val_str = 3;
+    optional bool val_bool = 4;
+    optional int32 val_num = 5;
+    optional bytes val_bytes = 6;
+}
+
+enum CompareType
+{
+    eq = 1;
+    ne = 2;
+    le = 3;
+    lt = 4;
+    ge = 5;
+    gt = 6;
+}
+
+message Range {
+    optional double start = 1;
+    optional double stop = 2;
+}
+
+enum DBGroupValueType
+{
+    DBGroupValueTypeNumber = 1;
+    DBGroupValueTypeString = 2;
+    DBGroupValueTypeBool = 3;
+    DBGroupValueTypeGroup = 4;
+    DBGroupValueTypeGroupArray = 5;
+    DBGroupValueTypeNumberArray = 6;
+    DBGroupValueTypeStringArray = 7;
+    DBGroupValueTypeBoolArray = 8;
+}
+
+
+message DBGroup
+{
+    optional string key = 1;
+    optional DBGroupValueType type = 2;
+
+    optional float val_number = 3;
+    optional string val_string = 4;
+    optional bool val_bool = 5;
+    optional DBGroup val_group = 6;
+    repeated DBGroup val_group_array = 7;
+    repeated float val_number_array = 8;
+    repeated string val_string_array = 9;
+    repeated bool val_bool_array = 10;
+}
+
+// 定义avatar slot,0x0000每一位表示的插槽
+enum AvatarSlot
+{
+    head_base = 0;
+    head_hair = 1;
+    head_eyes = 2;
+    head_hair_back = 3;
+    head_mous = 4;
+    head_hats = 5;
+    head_mask = 6;
+    head_spec = 7;
+    body_base = 8;
+    body_cost = 9;
+    body_cost_dres = 10;
+    body_tail = 11;
+    body_wing = 12;
+    body_spec = 13;
+    farm_base = 14;
+    farm_cost = 15;
+    farm_shld = 16;
+    farm_weap = 17;
+    farm_spec = 18;
+    barm_base = 19;
+    barm_cost = 20;
+    barm_shld = 21;
+    barm_weap = 22;
+    barm_spec = 23;
+    fleg_base = 24;
+    fleg_cost = 25;
+    fleg_spec = 26;
+    bleg_base = 27;
+    bleg_cost = 28;
+    bleg_spec = 29;
+    head_face = 30;
+    head_hats_back = 31;
+    head_chin = 32;
+    body_scar = 33;
+    body_cloa = 34;
+}
+
+
+enum AvatarStyle
+{
+    OriginAvatar = 1;
+    SuitType = 2;
+}
+
+enum Gender
+{
+    Male = 1;
+    Female = 2;
+}
+
+enum LevelUpType {
+    Player = 1;
+}
+
+message StorageData
+{
+    optional string id = 1;
+    optional string content = 2;
+    optional bool deleted = 3[default=false];
+}
+
+
+message ServerStatusData
+{
+    required int32 uuid = 1;
+    required ServerType type = 2;
+    required ServerStatus status = 3;
+    optional string ip = 4;
+    optional int32 port = 5;
+}
+
+message ServiceStatus
+{
+    required ServerStatus status = 1;
+    optional string ip = 2;
+    optional int32 port = 3;
+    optional int32 uuid = 4;
+    optional ServerType server_type = 5;
+    optional bytes message = 6;
+    optional double cpu_free = 7;
+    optional double mem_free = 8;
+    optional double current_progress_mem_usage = 9;
+}
+
+message OP_SERVICE_REQ_INIT
+{
+    required ServiceStatus service_status= 1;
+}
+
+message OP_SERVICE_REQ_UPLOAD_STATUS
+{
+    required ServiceStatus service_status= 1;
+}
+
+message OP_SERVICE_REQ_UPLOAD_PERF
+{
+    required ServiceStatus service_status= 1;
+}
+
+message OP_SERVICE_REQ_REGISTER_SERVICE_STATUS_LISTENER
+{
+    optional uint32 listener_mask = 1[default=0x00000000];
+}
+
+
+message OP_SERVICE_REQ_TERMINATE
+{
+    required int32 uuid = 1;
+}
+
+
+enum FrontEndUniqueUIEnum
+{
+    PicaNewRole = 0x1001;
+}
+
+message Pagination
+{
+    optional uint32 skip = 1[default=0];
+    optional uint32 page = 2[default=1];
+    optional uint32 per_page = 3;
+}
+
+enum ErrorLevel
+{
+    SERVICE_GATEWAY_TRACE = 0x0000;
+    SERVICE_LOBBY_TRACE = 0x0001;
+    SERVICE_VIRTUAL_WORLD_TRACE = 0x0002;
+    SERVICE_VIRTUAL_WORLD_LUA_TRACE = 0x0004;
+
+    SERVICE_GATEWAY_ERROR = 0x1000;
+    SERVICE_LOBBY_ERROR = 0x1001;
+    SERVICE_VIRTUAL_WORLD_ERROR = 0x1002;
+    SERVICE_VIRTUAL_WORLD_LUA_ERROR = 0x1004;
+}
+
+enum HttpMethod
+{
+    HTTP_GET = 0;
+    HTTP_HEAD = 1;
+    HTTP_POST = 2;
+    HTTP_PUT = 3;
+    HTTP_DELETE = 4;
+    HTTP_CONNECT = 5;
+    HTTP_OPTIONS = 6;
+    HTTP_TRACE = 7;
+    HTTP_PATCH = 8;
+}
+
+
+enum OfflineState
+{
+    OFFLINE = 0x0001;
+    KICK_OUT_BY_ANOTHER_CONNECTION = 0x0002;
+}
+
+//红点 enum
+// enum RedDotTypeEnum
+// {
+//     MAIL_REDDOTSTATUS = 1;
+//     GALLERY_REDDOTSTATUS = 2;
+//     PACKAGE_REDDOTSTATUS = 3;
+//     ORDER_REDDOTSTATUS = 4;
+//     DAILY_QUEST_REDDOTSTATUS = 5;
+//     MAIN_QUEST_REDDOTSTATUS = 6;
+//     FRIEND_REDDOTSTATUS = 7;
+//     DRESS_REDDOTSTATUS = 8;
+//     GALLERY_PROGRESSREWARD_REDDOTSTATUS = 9;
+//     GALLERY_COLLECTIONREWARD_REDDOTSTATUS = 10;
+// }
+
+message TerrainGroup
+{
+    repeated op_def.PBPoint2i position_list = 1;  // 需要替换为该paletteKey的位置信息
+    optional string sn = 2; // 空字符串
+}
+
+
+message StrMsg
+{
+    optional string i18n_msg  = 1;  // i18n key
+    optional string i18n_data  = 2; // json string data format
+    optional string msg = 3;
+}
+
+message RelationState
+{
+    required string platformId = 1;
+    optional string relationShip = 2;
+}
+
+enum Anchor
+{
+    ANCHOR_TOP_LEFT = 1;
+    ANCHOR_TOP = 2;
+    ANCHOR_TOP_RIGHT = 3;
+    ANCHOR_RIGHT = 4;
+    ANCHOR_BOTTOM_RIGHT = 5;
+    ANCHOR_BOTTOM = 6;
+    ANCHOR_BOTTOM_LEFT = 7;
+    ANCHOR_LEFT = 8;
+    ANCHOR_CENTER = 9;
+}
+
+message ShopItem {
+    required string id = 1;
+    required string item_id = 2;
+    required string category = 3;
+    required string subcategory = 4;
+    required string currency = 5;
+    required int32 price = 6;
+}
