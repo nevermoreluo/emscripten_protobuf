@@ -7,7 +7,7 @@
 #### How ?
 
 `bash docker-build.sh -h` 将提供对应的帮助方法  
-`bash docker-build.sh -build` 提供用来编译基础依赖的镜像，镜像包含protobuf以及emsdk
+`bash docker-build.sh -buildEnv` 提供用来编译基础依赖的镜像，镜像包含protobuf以及emsdk
 `bash docker-build.sh -make` 将根据cmake编译src内的c++代码生成helloworld.js
 
 
@@ -16,6 +16,14 @@
 #### Q&A
 
 ##### Q: 什么是test_post_script.js
-__ATPOSTRUN__
+
+
+在docker-build.sh脚本内设置了编译参数`--post-js ../test_post_script.js`,其实就是会将--post-js脚本内的代码放到<output>.js最后，  
+而`__ATPOSTRUN__`是一个Emscripten Runtime Environment内部的一个生命周期Hook队列，  
+`functions called after the runtime has exited` 即当runtime退出时会调用`__ATPOSTRUN__`队列内的函数
+
+
+
+
 
 

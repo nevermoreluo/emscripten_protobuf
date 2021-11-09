@@ -10,7 +10,7 @@ do
 key="$1"
 
 case $key in
-    -build|--build-docker)
+    -buildEnv|--buildEnv-docker)
     BUILD_DOCKER=YES
     shift # past value
     ;;
@@ -40,11 +40,11 @@ if [[ -n $1 ]]; then
 fi
 
 if [[ ! -z "$HELP" ]]; then
-    echo "Usage: <-build|-make>"
+    echo "Usage: <-buildEnv|-make>"
     echo "Options:"
 
     echo "-h, --help                    show this help message and exit"
-    echo "-build,                       build docker for protobuf+emcc named emcc_proto"
+    echo "-buildEnv,                       build docker for protobuf+emcc named emcc_proto"
     echo "-make,                        use emcc_proto docker container to make wasm"
 fi
 
@@ -59,6 +59,6 @@ if [[ ! -z "$MAKE" ]]; then
         bash -c "rm -rf build/; \
         mkdir build/ && cd build/ && \
         emcmake cmake .. && make && \
-        emcc --bind --post-js ../test_post_script.js -o ../helloworld.js -Wl,--whole-archive libemccTest.a -Wl,--no-whole-archive"
+        emcc --bind --post-js ../test_post_script.js -o ../eproto.js -Wl,--whole-archive libeProto.a -Wl,--no-whole-archive"
 fi
 

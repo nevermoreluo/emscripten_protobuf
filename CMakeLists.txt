@@ -1,4 +1,4 @@
-project (emccTest)
+project (eProto)
 cmake_minimum_required(VERSION 3.10)
 
 option(JS_ONLY "Compiles to native JS (No WASM)" OFF)
