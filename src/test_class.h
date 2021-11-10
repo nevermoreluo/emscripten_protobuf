@@ -10,7 +10,7 @@ private:
     int x;
     std::string y;
     static const int num = 6;
-    static const op_def::Anchor anh = op_def::Anchor::ANCHOR_TOP_LEFT;
+    static op_def::Anchor anh;
 
 public:
     //构造函数 
@@ -20,6 +20,9 @@ public:
     //Get Set函数
     int getValueX() const;
     void setValueX(int val);
+
+    op_def::Anchor getAnh() const;
+    void setAnh(op_def::Anchor val);
     //静态方法
     //在静态成员函数中，不能访问非静态成员变量，也不能调用非静态成员函数
     static std::string getStringValue(const xClass & instance);
@@ -40,6 +43,7 @@ EMSCRIPTEN_BINDINGS(module){
     .function("incrementX",&xClass::incrementX)
     //绑定私有成员变量的setter和getter方法
     .property("x",&xClass::getValueX,&xClass::setValueX) 
+    .property("anh", &xClass::getAnh, &xClass::setAnh)
     //绑定类的静态方法
     .class_function("getStringValue",&xClass::getStringValue)
     .class_function("PrintNum",&xClass::PrintNum); 

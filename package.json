@@ -1,0 +1,26 @@
+{
+  "name": "eproto",
+  "version": "1.0.0",
+  "description": "尝试使用protobuf+wasm将proto结构解析层使用c++实现，并暴露给前端js，使得解析层统一实现，并暴露统一接口。此项目为实验proto+wasm暴露对应的c层对应类以及接口是否可行",
+  "main": "eproto.js",
+  "scripts": {
+    "build-docker-env": "docker build -f Dockerfiles/Dockerfile -t emcc_proto .",
+    "make": "docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emcc_proto bash -c 'rm -rf build/; mkdir build/ && cd build/ && emcmake cmake .. && make'",
+    "gen-type-define": "./node_modules/.bin/tsembind eproto.js > eproto.d.ts",
+    "build": "yarn make && docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emcc_proto bash -c 'cd build/ && emcc --bind --ts-typings --post-js ../test_post_script.js -o ../eproto.js -Wl,--whole-archive libeProto.a -Wl,--no-whole-archive' && yarn gen-type-define",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nevermoreluo/emscripten_protobuf.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nevermoreluo/emscripten_protobuf/issues"
+  },
+  "homepage": "https://github.com/nevermoreluo/emscripten_protobuf#readme",
+  "dependencies": {
+    "tsembind": "^1.0.2"
+  }
+}

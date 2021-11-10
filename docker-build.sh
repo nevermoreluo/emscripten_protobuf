@@ -59,6 +59,6 @@ if [[ ! -z "$MAKE" ]]; then
         bash -c "rm -rf build/; \
         mkdir build/ && cd build/ && \
         emcmake cmake .. && make && \
-        emcc --bind --post-js ../test_post_script.js -o ../eproto.js -Wl,--whole-archive libeProto.a -Wl,--no-whole-archive"
+        emcc --bind --ts-typings --post-js ../test_post_script.js -o ../eproto.js -Wl,--whole-archive libeProto.a -Wl,--no-whole-archive"
 fi
 
