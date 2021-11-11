@@ -7,7 +7,7 @@
     "build-docker-env": "docker build -f Dockerfiles/Dockerfile -t emcc_proto .",
     "make": "docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emcc_proto bash -c 'rm -rf build/; mkdir build/ && cd build/ && emcmake cmake .. && make'",
     "gen-type-define": "./node_modules/.bin/tsembind eproto.js > eproto.d.ts",
-    "build": "yarn make && docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emcc_proto bash -c 'cd build/ && emcc --bind --ts-typings --post-js ../test_post_script.js -o ../eproto.js -Wl,--whole-archive libeProto.a -Wl,--no-whole-archive' && yarn gen-type-define",
+    "build": "yarn make && docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emcc_proto bash -c 'cd build/ && emcc --bind --ts-typings --post-js ../post_script.js -o ../eproto.js -Wl,--whole-archive libeProto.a -Wl,--no-whole-archive -s WASM=1 -s NO_EXIT_RUNTIME=1' && yarn gen-type-define",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

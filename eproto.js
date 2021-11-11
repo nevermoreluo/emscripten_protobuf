@@ -7287,3 +7287,13 @@ run();
 //     //析构该对象实例，释放wasm共享线性内存空间
 //     xClass.delete();
 // });
+
+Module.init = function (func) {
+    __ATPOSTRUN__.push(func);
+}
+
+module.exports = Module;
+
+// export default Module;
+// export const xClass = Module.xClass;
+

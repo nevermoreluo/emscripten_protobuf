@@ -19,10 +19,10 @@
 
 #### Q&A
 
-##### Q: 什么是test_post_script.js
+##### Q: 什么是post_script.js
 
 
-在docker-build.sh脚本内设置了编译参数`--post-js ../test_post_script.js`,其实就是会将--post-js脚本内的代码放到<output>.js最后，  
+在docker-build.sh脚本内设置了编译参数`--post-js ../post_script.js`,其实就是会将--post-js脚本内的代码放到<output>.js最后，  
 而`__ATPOSTRUN__`是一个Emscripten Runtime Environment内部的一个生命周期Hook队列，  
 `functions called after the runtime has exited` 即当runtime退出时会调用`__ATPOSTRUN__`队列内的函数
 

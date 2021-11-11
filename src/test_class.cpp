@@ -2,6 +2,7 @@
 #include "test_class.h"
 
 op_def::Anchor xClass::anh = op_def::Anchor::ANCHOR_TOP_LEFT;
+
 xClass::xClass(int x,std::string y) : x(x),y(y){
 }
 //成员函数

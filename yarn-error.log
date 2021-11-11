@@ -34,7 +34,7 @@ npm manifest:
       "build": [
         "yarn make"
         "&& yarn gen-type-define"
-        "&& docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emcc_proto bash -c 'cd build/ && emcc --bind --ts-typings --post-js ../test_post_script.js -o ../eproto.js -Wl,--whole-archive libeProto.a -Wl,--no-whole-archive'"
+        "&& docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emcc_proto bash -c 'cd build/ && emcc --bind --ts-typings --post-js ../post_script.js -o ../eproto.js -Wl,--whole-archive libeProto.a -Wl,--no-whole-archive'"
       ],
       "test": "echo \"Error: no test specified\" && exit 1"
     },
